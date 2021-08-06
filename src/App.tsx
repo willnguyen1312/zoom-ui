@@ -97,9 +97,9 @@ export default function App() {
     function handleWheel(event: WheelEvent) {
       event.preventDefault();
 
-      const { clientX, clientY, deltaX, deltaY, ctrlKey } = event;
+      const { clientX, clientY, deltaX, deltaY, ctrlKey, metaKey } = event;
 
-      if (ctrlKey) {
+      if (ctrlKey || metaKey) {
         setCamera((camera) =>
           zoomCamera(camera, { x: clientX, y: clientY }, deltaY / 100)
         );
@@ -108,11 +108,11 @@ export default function App() {
       }
     }
 
-    const elm = ref.current!;
-    elm.addEventListener("wheel", handleWheel, { passive: false });
+    const elm = ref.current;
+    elm?.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
-      elm.removeEventListener("wheel", handleWheel);
+      elm?.removeEventListener("wheel", handleWheel);
     };
   }, [ref]);
 
@@ -126,22 +126,27 @@ export default function App() {
   });
 
   React.useEffect(() => {
-    const cvs = ref.current!;
-    cvs.width = window.innerWidth;
-    cvs.height = window.innerHeight;
+    const cvs = ref.current;
+    if (cvs) {
+      cvs.width = window.innerWidth;
+      cvs.height = window.innerHeight;
+    }
   }, []);
 
   React.useEffect(() => {
-    const cvs = ref.current!;
-    const ctx = cvs.getContext("2d")!;
+    const cvs = ref.current;
+    if (cvs) {
+      const ctx = cvs.getContext("2d");
+      if (ctx) {
+        ctx.resetTransform();
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        ctx.scale(camera.z, camera.z);
+        ctx.translate(camera.x, camera.y);
 
-    ctx.resetTransform();
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    ctx.scale(camera.z, camera.z);
-    ctx.translate(camera.x, camera.y);
-
-    for (let i = 0; i < 100; i++) {
-      ctx.fillRect((i % 10) * 200, Math.floor(i / 10) * 200, 100, 100);
+        for (let i = 0; i < 100; i++) {
+          ctx.fillRect((i % 10) * 200, Math.floor(i / 10) * 200, 100, 100);
+        }
+      }
     }
   });
 
