@@ -15,14 +15,14 @@ interface Camera {
 function screenToCanvas(point: Point, camera: Camera): Point {
   return {
     x: point.x / camera.z - camera.x,
-    y: point.y / camera.z - camera.y
+    y: point.y / camera.z - camera.y,
   };
 }
 
 function canvasToScreen(point: Point, camera: Camera): Point {
   return {
     x: (point.x - camera.x) * camera.z,
-    y: (point.y - camera.y) * camera.z
+    y: (point.y - camera.y) * camera.z,
   };
 }
 
@@ -45,7 +45,7 @@ function getViewport(camera: Camera, box: Box): Box {
     maxX: bottomRight.x,
     maxY: bottomRight.y,
     height: bottomRight.x - topLeft.x,
-    width: bottomRight.y - topLeft.y
+    width: bottomRight.y - topLeft.y,
   };
 }
 
@@ -53,7 +53,7 @@ function panCamera(camera: Camera, dx: number, dy: number): Camera {
   return {
     x: camera.x - dx / camera.z,
     y: camera.y - dy / camera.z,
-    z: camera.z
+    z: camera.z,
   };
 }
 
@@ -66,7 +66,7 @@ function zoomCamera(camera: Camera, point: Point, dz: number): Camera {
   return {
     x: camera.x + (p2.x - p1.x),
     y: camera.y + (p2.y - p1.y),
-    z: zoom
+    z: zoom,
   };
 }
 
@@ -90,7 +90,7 @@ export default function App() {
   const [camera, setCamera] = React.useState({
     x: 0,
     y: 0,
-    z: 1
+    z: 1,
   });
 
   React.useEffect(() => {
@@ -122,7 +122,7 @@ export default function App() {
     maxX: window.innerWidth,
     maxY: window.innerHeight,
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
   });
 
   React.useEffect(() => {
